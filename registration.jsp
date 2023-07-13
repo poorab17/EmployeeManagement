@@ -317,7 +317,21 @@ select {
 </script>
 	<link rel="stylesheet" href="alert/dist/sweetalert.css">
 	
+<script type="text/javascript">
+  function toggleOptions(optgroup) {
+    const options = optgroup.getElementsByTagName("option");
+    for (let i = 0; i < options.length; i++) {
+      options[i].toggleAttribute("disabled");
+    }
+  }
 
+  function toggleSelectedOptions(selectElement) {
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    if (selectedOption.parentElement.classList.contains("expandable")) {
+      toggleOptions(selectedOption.parentElement);
+    }
+  }
+</script>
 <script type="text/javascript">
 
 var status = document.getElementById("status").value;
