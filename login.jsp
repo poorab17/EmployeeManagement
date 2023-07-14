@@ -97,6 +97,9 @@ input[type="submit"] {
 
 </head>
 <body>
+<input type="hidden" id="status" value="<%= request.getAttribute("status") %>">
+ 
+
 
 	<div class="main">
 
@@ -123,7 +126,7 @@ input[type="submit"] {
 							</div>
 							<div class="form-group">
 								<input type="checkbox" name="remember-me" id="remember-me"
-									class="agree-term" required="required" />Remember me
+									class="agree-term"  />Remember me
 									 <label for="remember-me"
 									class="label-agree-term"><span><span></span></span>
 								</label>
@@ -157,6 +160,10 @@ input[type="submit"] {
 
 	</div>
 	
+	<script>
+   var status = '<%= request.getAttribute("status") %>';
+  </script>
+	
 	<!-- JS -->
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="js/main.js"></script>
@@ -166,7 +173,8 @@ input[type="submit"] {
 	
 <script type="text/javascript">
 
-var status = document.getElementById("status").value;
+var status = '<%= request.getAttribute("status") %>';
+
 
 if(status == "failed")
 
