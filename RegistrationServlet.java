@@ -2,48 +2,38 @@ package com.sts.registration;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.mindrot.jbcrypt.BCrypt;
-
 import com.sts.um.bean.UserBean;
 
 
-/**
- * Servlet implementation class RegistrationServlet
- */
-
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-import org.mindrot.jbcrypt.BCrypt;
-
 @WebServlet("/register")
+@MultipartConfig(fileSizeThreshold = 1024*1024*2,
+maxFileSize = 1024*1024*10,
+maxRequestSize =1024*1024*50)
 public class RegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+	        
 		 String userIdParam = request.getParameter("id");
 		  boolean isEditMode = userIdParam != null && !userIdParam.isEmpty();
 		
@@ -61,6 +51,21 @@ public class RegistrationServlet extends HttpServlet {
 		String detail = request.getParameter("details");
 		String comment = request.getParameter("comment");
 		String file = request.getParameter("profile-pic");
+		
+		 Part filePart = request.getPart("profile-pic");
+	        String fileName = getFileName(filePart);
+	        
+	        if (fileName != null && !fileName.isEmpty()) 
+	        {
+	        	String uploadPath = "C:\\Users\\deepak.gupta\\Desktop\\fromRegister\\" + fileName;
+	        	filePart.write(uploadPath);
+	        	 try (InputStream inputStream = filePart.getInputStream()) {
+	                 Files.copy(inputStream, Path.of(uploadPath), StandardCopyOption.REPLACE_EXISTING);
+	             } catch (IOException e) {
+	                 e.printStackTrace();
+	             }
+	        }
+		
 		RequestDispatcher dispatcher = null;
 		Connection con =null;
 		
@@ -71,6 +76,22 @@ public class RegistrationServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 			return;
 			
+		}
+		
+		else if (!name.matches("[a-zA-Z][a-zA-Z ]*")) {
+		    
+		    request.setAttribute("status", "invalidCharacters");
+		    dispatcher = request.getRequestDispatcher("registration.jsp");
+		    dispatcher.forward(request, response);
+		    return;
+		} 
+		
+		else if (name.length() < 2 || name.length() > 50) {
+		  
+		    request.setAttribute("status", "invalidLength");
+		    dispatcher = request.getRequestDispatcher("registration.jsp");
+		    dispatcher.forward(request, response);
+		    return;
 		}
 				
 		if (password == null || password.equals("")) 
@@ -123,8 +144,9 @@ public class RegistrationServlet extends HttpServlet {
 			request.setAttribute("status","invalidUmobilelength");
 			dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
-			return;
+			
 		}
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user_projects?useSSL=false","root","root");
@@ -151,7 +173,7 @@ public class RegistrationServlet extends HttpServlet {
 		          } else {
 		              request.setAttribute("status", "failed");
 		          }
-		          dispatcher = request.getRequestDispatcher("registration.jsp");
+		          dispatcher = request.getRequestDispatcher("user-list.jsp");
 		          dispatcher.forward(request, response);
 		            
 		      }
@@ -196,6 +218,20 @@ public class RegistrationServlet extends HttpServlet {
 			}
 			
 		}
-			
-	}	
+		
+		
+	}
+	
+	private String getFileName(Part part) {
+	    String contentDispositionHeader = part.getHeader("content-disposition");
+	    String[] elements = contentDispositionHeader.split(";");
+	    for (String element : elements) {
+	        if (element.trim().startsWith("filename")) {
+	            return element.substring(element.indexOf('=') + 1).trim().replace("\"", "");
+	        }
+	    }
+	    return null;
+	}
+	
+	
 }
