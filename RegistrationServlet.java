@@ -44,6 +44,9 @@ public class RegistrationServlet extends HttpServlet {
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		 String userIdParam = request.getParameter("id");
+		  boolean isEditMode = userIdParam != null && !userIdParam.isEmpty();
+		
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String act_password = request.getParameter("pass");
@@ -66,6 +69,7 @@ public class RegistrationServlet extends HttpServlet {
 			request.setAttribute("status","invalidName");
 			dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
+			return;
 			
 		}
 				
@@ -98,6 +102,7 @@ public class RegistrationServlet extends HttpServlet {
 			request.setAttribute("status","invalidUmobile");
 			dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
+			return;
 		}
 		
 		else if (mobile.length()>10)
@@ -105,11 +110,41 @@ public class RegistrationServlet extends HttpServlet {
 			request.setAttribute("status","invalidUmobilelength");
 			dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
+			return;
 		}
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user_projects?useSSL=false","root","root");
+		      if (isEditMode) {
+		          int userId = Integer.parseInt(userIdParam);
+		          PreparedStatement pstmt = con.prepareStatement("UPDATE user_projects.user SET name=?, email=?, password=?, mobile=?, education=?, age=?, gender=?, hobby=?, detail=?, comment=?, file=? WHERE id=?");
+		          pstmt.setString(1, name);
+		          pstmt.setString(2, email);
+		          pstmt.setString(3, password);
+		          pstmt.setString(4, mobile);
+		          pstmt.setString(5, education);
+		          pstmt.setString(6, age);
+		          pstmt.setString(7, gender);
+		          pstmt.setString(8, hobby);
+		          pstmt.setString(9, detail);
+		          pstmt.setString(10, comment);
+		          pstmt.setString(11, file);
+		          pstmt.setInt(12, userId);
+
+		          int rowCount = pstmt.executeUpdate();
+		          
+		          if (rowCount > 0) {
+		              request.setAttribute("status", "success");
+		          } else {
+		              request.setAttribute("status", "failed");
+		          }
+		          dispatcher = request.getRequestDispatcher("registration.jsp");
+		          dispatcher.forward(request, response);
+		            
+		      }
+		      
+		    else {
 			PreparedStatement pstmt = con.prepareStatement("insert into user_projects.user(name,email,password,mobile,education,age,gender,hobby,detail,comment,file) values(?,?,?,?,?,?,?,?,?,?,?) ");
 			pstmt.setString(1,name);
 			pstmt.setString(2,email);
@@ -124,7 +159,7 @@ public class RegistrationServlet extends HttpServlet {
 			pstmt.setString(11,file);
 
 			int rowcount = pstmt.executeUpdate();
-			dispatcher = request.getRequestDispatcher("registration.jsp");
+			//dispatcher = request.getRequestDispatcher("registration.jsp");
 			
 		if(rowcount>0){
 				request.setAttribute("status", "success");	
@@ -133,9 +168,10 @@ public class RegistrationServlet extends HttpServlet {
 			else {
 				request.setAttribute("status", "failed");	
 			}
+		    dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
 			
-		} catch (Exception e) {
+		}} catch (Exception e) {
 		e.printStackTrace();
 		}
 		
@@ -148,9 +184,6 @@ public class RegistrationServlet extends HttpServlet {
 			}
 			
 		}
-		
-		
-	}
-	
-	
+			
+	}	
 }
