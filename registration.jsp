@@ -1,5 +1,5 @@
-<%@page import="com.sts.um.bean.UserBean"%>
-<%@page import="com.sts.um.bean.UserDataUtils"%>
+<%@page import="com.sts.um.bean.UserBean" %>
+<%@page import="com.sts.um.bean.UserDataUtils" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -185,7 +185,7 @@ select {
         <div class="signup-form">
           <h2 class="form-title">Sign up</h2>
 
-          <form method="post" action="register?id=${user.id}" class="register-form" id="register-form">
+          <form method="post" action="register?id=${user.id}" class="register-form" id="register-form" enctype="multipart/form-data">
 
             <div class="form-group">
               <label for="name">Full Name<i class="zmdi zmdi-account material-icons-name"></i></label>
@@ -206,7 +206,7 @@ select {
             
             <div class="form-group">
              <label for="contact">Contact<i class="zmdi zmdi-lock-outline"></i></label>
-              <input type="text" name="contact" id="contact" placeholder="Contact no" required="required" value="${editMode ? user.mobile : ''}" />
+              <input type="text" name="contact" id="contact" placeholder="Contact no. should be 10 digit" required="required" value="${editMode ? user.mobile : ''}" />
             </div>
 
             <div class="form-group">
@@ -310,6 +310,7 @@ select {
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="js/main.js"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="alert/dist/sweetalert.min.js"></script>
 	<script>
 	function updateFileName(input) {
 	  var filePath = input.value;
