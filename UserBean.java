@@ -56,21 +56,7 @@ public UserBean(int id, String name, String password, String email, String mobil
 	this.file = file;
 }
 
-public UserBean(int id, String name, String password, String email, String mobile, String education, String age,
-			String gender, String hobby, String detail, String comment) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.password = password;
-		this.email = email;
-		this.mobile = mobile;
-		this.education = education;
-		this.age = age;
-		this.gender = gender;
-		this.hobby = hobby;
-		this.detail = detail;
-		this.comment = comment;
-	}
+
 
 
 
@@ -90,20 +76,6 @@ public UserBean(String name, String password, String email, String mobile, Strin
 	this.file = file;
 }
 
-public UserBean(String name, String password, String email, String mobile, String education, String age,
-			String gender, String hobby, String detail, String comment) {
-		super();
-		this.name = name;
-		this.password = password;
-		this.email = email;
-		this.mobile = mobile;
-		this.education = education;
-		this.age = age;
-		this.gender = gender;
-		this.hobby = hobby;
-		this.detail = detail;
-		this.comment = comment;
-	}
 
 public UserBean(int id, String name, String email, String mobile, String age, String comment) {
 		super();
@@ -211,8 +183,5 @@ public String getComment() {
 public void setComment(String comment) {
 	this.comment = comment;
 }
-
-
-	
 
 }
