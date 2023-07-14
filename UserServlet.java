@@ -51,11 +51,7 @@ try {
 		case "/edit":
 			showEditForm(request, response);
 			break;
-			
-		case "/update":
-			updateUser(request, response);
-			break;
-		
+					
 		    default :
 		    	listUser(request, response);
 			break;
@@ -131,42 +127,20 @@ try {
 			try {
 				int  id =Integer.parseInt(request.getParameter("id")) ;
 				UserBean existingUser = dao.selectUser(id);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("registration.jsp");
 				request.setAttribute("user", existingUser);
 				// Set a flag to indicate that it's an edit form
 		        request.setAttribute("editMode", true);
+		        request.setAttribute("userId", id);
+		        RequestDispatcher dispatcher = request.getRequestDispatcher("registration.jsp");
 				dispatcher.forward(request, response);
-				 updateUser(request, response);
+				 
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}				
 		}
 		
-		private void updateUser(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
-		{
-			int  id =Integer.parseInt(request.getParameter("id")) ;
 
-			String name = request.getParameter("name");
-			String email = request.getParameter("email");
-			String password = request.getParameter("pass");
-			String reupwd = request.getParameter("re-pass");
-			String mobile = request.getParameter("contact");
-			String education=request.getParameter("education");
-			String age = request.getParameter("age");
-			String gender= request.getParameter("gender");
-			 String[] hobbiesString = request.getParameterValues("hobbies");
-		    String hobby = String.join(", ", hobbiesString);
-			String detail = request.getParameter("details");
-			String comment = request.getParameter("comment");
-			String file = request.getParameter("profile-pic");
-			
-			
-			UserBean book = new UserBean(id, name, password, email, mobile, education, age, gender, hobby, detail, comment,file);
-			dao.updateUser(book);
-			    
-			response.sendRedirect("list");
-		}
 		
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
