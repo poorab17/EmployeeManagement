@@ -78,7 +78,14 @@ public class RegistrationServlet extends HttpServlet {
 			request.setAttribute("status","invalidUpwd");
 			dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
+			return;
 				
+		}
+		else if (password.length() < 8) {
+		    request.setAttribute("status", "invalidPwdLength");
+		    dispatcher = request.getRequestDispatcher("registration.jsp");
+		    dispatcher.forward(request, response);
+		    return;
 		}
 		
 		else if (password.equals(reupwd)) {
@@ -96,6 +103,12 @@ public class RegistrationServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 			
 		}
+		else if (!email.matches("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b")) {
+		    request.setAttribute("status", "invalidEmailFormat");
+		    dispatcher = request.getRequestDispatcher("registration.jsp");
+		    dispatcher.forward(request, response);
+		    return;
+		}
 		
 		if (mobile == null || mobile.equals("")) 
 		{
@@ -105,14 +118,13 @@ public class RegistrationServlet extends HttpServlet {
 			return;
 		}
 		
-		else if (mobile.length()>10)
+		else if (mobile.length()!=10)
 		{
 			request.setAttribute("status","invalidUmobilelength");
 			dispatcher = request.getRequestDispatcher("registration.jsp");
 			dispatcher.forward(request, response);
 			return;
 		}
-		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user_projects?useSSL=false","root","root");
