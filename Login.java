@@ -49,6 +49,8 @@ public class Login extends HttpServlet {
 			return;
 		 }
 		
+		
+		
 		try 
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -61,6 +63,7 @@ public class Login extends HttpServlet {
 				if (BCrypt.checkpw(act_password, storedHashedPassword)) {
 					session.setAttribute("name", rs.getString("name"));
 					dispatcher = request.getRequestDispatcher("user-list.jsp");
+					session.setAttribute("loggedIn", true);
 				} else {
 					session.setAttribute("status", "failed");
 					dispatcher = request.getRequestDispatcher("login.jsp");
