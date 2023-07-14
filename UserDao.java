@@ -145,32 +145,6 @@ public class UserDao
 	        }
 	    }
 	
-	public boolean updateUser(UserBean user) 
-	{
-		boolean rowUpdated = false;
-		
-		try {
-			Connection con = getConnection();
-			PreparedStatement pstmt = con.prepareStatement("update user set name=?,password=?,email=?,mobile=?,education=?,age=?,gender=?,hobby=?,detail=?,comment=? where id=?");
-			{
-				 setStatementParameters(pstmt, user.getName(), user.getEmail(), user.getPassword(), user.getMobile(),
-		         user.getEducation(), user.getAge(), user.getGender(), user.getHobby(), user.getDetail(), user.getComment(),user.getFile());
-		            pstmt.setInt(12, user.getId());
-			
-        	System.out.println(pstmt);
-			pstmt.executeUpdate();
-			rowUpdated =pstmt.executeUpdate()>0;
-		}
-		}
-		catch (Exception e)
-		{
-		e.printStackTrace();
-		}
-		return rowUpdated;
-	}
-	
-	
-	
 	public boolean DeleteUser(int id) 
 	{
 		boolean rowdelete = false;
