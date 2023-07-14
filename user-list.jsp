@@ -22,6 +22,15 @@ function confirmDelete() {
 </script>
 </head>
 <body>
+
+<%
+  Boolean loggedIn = (Boolean) session.getAttribute("loggedIn");
+  if (loggedIn == null || !loggedIn) {
+    response.sendRedirect("user-list.jsp");
+   
+  }
+%>
+
 <header>
 		<nav class="navbar navbar-expand-md navbar-dark"                       
 			style="background-color: blue">
