@@ -167,6 +167,8 @@ select {
 
 <input type="hidden" id="status" value="<%= request.getAttribute("status")%>">
 
+
+
 <%
    UserBean user = UserDataUtils.getExistingUserData(request);
   Boolean editModeObj = (Boolean) request.getAttribute("editMode");
@@ -183,7 +185,8 @@ select {
         <div class="signup-form">
           <h2 class="form-title">Sign up</h2>
 
-          <form method="post" action="register" class="register-form" id="register-form">
+          <form method="post" action="register?id=${user.id}" class="register-form" id="register-form">
+
             <div class="form-group">
               <label for="name">Full Name<i class="zmdi zmdi-account material-icons-name"></i></label>
               <input type="text" name="name" id="name" placeholder="Your Name" required="required"  value="${editMode ? user.name : ''}" />
@@ -315,9 +318,12 @@ select {
 	  pathSpan.textContent = filePath ? '(' + filePath + ')' : ''; // Set the file path text
 	}
 </script>
+<script>
+  var status = '<%= request.getAttribute("status") %>';
+</script>
 	<link rel="stylesheet" href="alert/dist/sweetalert.css">
 	
-<script type="text/javascript">
+	<script type="text/javascript">
   function toggleOptions(optgroup) {
     const options = optgroup.getElementsByTagName("option");
     for (let i = 0; i < options.length; i++) {
@@ -332,6 +338,8 @@ select {
     }
   }
 </script>
+	
+
 <script type="text/javascript">
 
 var status = document.getElementById("status").value;
